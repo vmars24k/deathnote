@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="style.css" />
+    
+    <!-- FAVICON -->
+    <link rel="icon" href="images/skull.ico" sizes="32x32" type="image/webp">
+
+    <title>Death Note</title>
+  </head>
+
+  <body>
+    <!-- PIN Modal -->
+    <div id="pin-modal" class="modal">
+      <div class="modal-content">
+        <h2>Enter 6-digit PIN</h2>
+        <div class="pin-container">
+          <input type="password" maxlength="1" class="pin-digit" data-index="0">
+          <input type="password" maxlength="1" class="pin-digit" data-index="1">
+          <input type="password" maxlength="1" class="pin-digit" data-index="2">
+          <input type="password" maxlength="1" class="pin-digit" data-index="3">
+          <input type="password" maxlength="1" class="pin-digit" data-index="4">
+          <input type="password" maxlength="1" class="pin-digit" data-index="5">
+        </div>
+        <p id="pin-error" class="error-message"></p>
+        <button id="submit-pin">Submit</button>
+      </div>
+    </div>
+
+    <div class="flipbook">
+      <!-- Front Cover -->
+      <div class="hard cover">
+        <img src="images/frontcover.jpg" alt="Front Cover" />
+        <div class="cover-text">
+        </div>
+      </div>
+
+      <!-- Inside Front Cover -->
+      <div class="hard cover inside">
+        <img src="images/page1.jpg" alt="Inside Front Cover" />
+      </div>
+
+      <!-- Inner pages -->
+      <div class="page lined-paper">
+        <div class="page-header">II</div>
+        <div class="note-content" contenteditable="false" data-page="1"></div>
+      </div>
+      <div class="page lined-paper">
+        <div class="page-header">III</div>
+        <div class="note-content" contenteditable="false" data-page="2"></div>
+      </div>
+      <div class="page lined-paper">
+        <div class="page-header">IV</div>
+        <div class="note-content" contenteditable="false" data-page="3"></div>
+      </div>
+      <div class="page lined-paper">
+        <div class="page-header">V</div>
+        <div class="note-content" contenteditable="false" data-page="4"></div>
+      </div>
+      <div class="page lined-paper">
+        <div class="page-header">VI</div>
+        <div class="note-content" contenteditable="false" data-page="5"></div>
+      </div>
+      <div class="page lined-paper">
+        <div class="page-header">VII</div>
+        <div class="note-content" contenteditable="false" data-page="6"></div>
+      </div>
+
+      <!-- Inside Back Cover -->
+      <div class="hard cover inside">
+      </div>
+
+      <!-- Back Cover -->
+      <div class="hard cover">
+        <div class="cover-text">
+          Divine Punishment & Justice <small>"Only used for people who disrespect you."</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Custom cursor elements -->
+    <div id="custom-cursor" aria-hidden="true">
+      <span class="cursor-dot"></span>
+      <span class="cursor-ring"></span>
+    </div>
+
+    <!-- Button Bar -->
+    <div class="button-bar">
+      <button id="zoom-in" class="bar-button" title="Zoom In">
+        <i class="icon">+</i>
+      </button>
+      <button id="zoom-out" class="bar-button" title="Zoom Out">
+        <i class="icon">-</i>
+      </button>
+      <button id="sound-toggle" class="bar-button" title="Toggle Sound">
+        <i class="icon">🔊</i>
+      </button>
+      <button id="play-pause" class="bar-button" title="Play/Pause">
+        <i class="icon">▶</i>
+      </button>
+      <button id="fullscreen" class="bar-button" title="Fullscreen">
+        <i class="icon">⛶</i>
+      </button>
+    </div>
+
+    <!-- Background Audio -->
+    <audio id="background-music" loop>
+      <source src="audio/l-theme-a.mp3" type="audio/mpeg">
+    </audio>
+    
+    <!-- Page Flip Audio -->
+    <audio id="page-flip-sound" preload="auto">
+      <source src="audio/assets_sound_turn2.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Unlock Button -->
+    <button id="unlock-notes" class="action-button">Unlock Notes</button>
+
+    <script src="jquery.js"></script>
+    <script src="turn.js"></script>
+    <script src="main.js"></script>
+    <script>
+      $(".flipbook").turn({
+        autoCenter: true
+      });
+    </script>
+  </body>
+</html>
