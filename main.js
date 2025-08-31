@@ -1,8 +1,8 @@
 /* jshint esversion: 6 */
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Set the PIN (in a real app, this would be hashed and stored securely)
-    const correctPin = '919393';
+    // Set the password (in a real app, this would be hashed and stored securely)
+    const correctPassword = 'deathnotebook';
     
     // Store notes data
     let notesData = {};
@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load any saved notes from localStorage
     loadNotes();
     
-    // PIN input handling
-    const pinDigits = document.querySelectorAll('.pin-digit');
+    // Password input handling
+    const passwordInput = document.getElementById('password-input');
     const pinModal = document.getElementById('pin-modal');
     const submitPinBtn = document.getElementById('submit-pin');
     const pinError = document.getElementById('pin-error');
@@ -30,58 +30,35 @@ document.addEventListener('DOMContentLoaded', function() {
     let isSoundOn = false;
     let isPlaying = false;
     
-    // Setup PIN input fields for better UX
-    pinDigits.forEach((input, index) => {
-        input.addEventListener('keyup', (e) => {
-            // Move to next input after typing a digit
-            if (e.key >= '0' && e.key <= '9') {
-                input.value = e.key;
-                if (index < pinDigits.length - 1) {
-                    pinDigits[index + 1].focus();
-                } else {
-                    input.blur();
-                }
-            }
-            // Handle backspace
-            else if (e.key === 'Backspace') {
-                input.value = '';
-                if (index > 0) {
-                    pinDigits[index - 1].focus();
-                }
-            }
-        });
-
-        // Prevent non-numeric input
-        input.addEventListener('input', (e) => {
-            e.target.value = e.target.value.replace(/[^0-9]/g, '');
-        });
+    // Setup Password input for better UX
+    passwordInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            validatePassword();
+        }
     });
 
-    // Unlock button to show PIN modal
+    // Unlock button to show password modal
     unlockBtn.addEventListener('click', function() {
-        // Clear previous PIN inputs
-        pinDigits.forEach(input => input.value = '');
+        // Clear previous password input
+        passwordInput.value = '';
         pinError.textContent = '';
-        pinDigits[0].focus();
+        passwordInput.focus();
         pinModal.style.display = 'flex';
     });
 
-    // Submit PIN button
-    submitPinBtn.addEventListener('click', validatePin);
+    // Submit password button
+    submitPinBtn.addEventListener('click', validatePassword);
 
-    // PIN validation function
-    function validatePin() {
-        let enteredPin = '';
-        pinDigits.forEach(input => {
-            enteredPin += input.value;
-        });
+    // Password validation function
+    function validatePassword() {
+        let enteredPassword = passwordInput.value;
 
-        if (enteredPin.length !== 6) {
-            pinError.textContent = 'Please enter all 6 digits';
+        if (!enteredPassword) {
+            pinError.textContent = 'Please enter a password';
             return;
         }
 
-        if (enteredPin === correctPin) {
+        if (enteredPassword === correctPassword) {
             // Unlock all notes for editing
             document.querySelectorAll('.note-content').forEach(note => {
                 note.contentEditable = 'true';
@@ -96,9 +73,9 @@ document.addEventListener('DOMContentLoaded', function() {
             unlockBtn.removeEventListener('click', unlockNotesHandler);
             unlockBtn.addEventListener('click', saveNotesHandler);
         } else {
-            pinError.textContent = 'Incorrect PIN. Please try again.';
-            pinDigits.forEach(input => input.value = '');
-            pinDigits[0].focus();
+            pinError.textContent = 'Incorrect password. Please try again.';
+            passwordInput.value = '';
+            passwordInput.focus();
         }
     }
 
@@ -141,10 +118,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Unlock notes handler (reference for event listener)
     function unlockNotesHandler() {
-        // Clear previous PIN inputs
-        pinDigits.forEach(input => input.value = '');
+        // Clear previous password input
+        passwordInput.value = '';
         pinError.textContent = '';
-        pinDigits[0].focus();
+        passwordInput.focus();
         pinModal.style.display = 'flex';
     }
 
@@ -156,65 +133,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.target === pinModal) {
             pinModal.style.display = 'none';
         }
-    });
-
-    // Handle Enter key in PIN input
-    pinDigits.forEach(input => {
-        input.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                validatePin();
-            }
-        });
-    });
-
-    // PIN pad functionality
-    const pinPad = document.querySelector('.pin-pad');
-    const pinPadButtons = document.querySelectorAll('.pin-pad-button');
-
-    pinPadButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const value = this.dataset.value;
-            
-            if (value === 'clear') {
-                // Clear all PIN inputs
-                pinDigits.forEach(input => input.value = '');
-                pinDigits[0].focus();
-            } 
-            else if (value === 'backspace') {
-                // Find the last filled input and clear it
-                let lastFilledIndex = -1;
-                for (let i = pinDigits.length - 1; i >= 0; i--) {
-                    if (pinDigits[i].value !== '') {
-                        lastFilledIndex = i;
-                        break;
-                    }
-                }
-                
-                if (lastFilledIndex >= 0) {
-                    pinDigits[lastFilledIndex].value = '';
-                    pinDigits[lastFilledIndex].focus();
-                }
-            } 
-            else {
-                // Find the first empty input and fill it
-                let emptyIndex = -1;
-                for (let i = 0; i < pinDigits.length; i++) {
-                    if (pinDigits[i].value === '') {
-                        emptyIndex = i;
-                        break;
-                    }
-                }
-                
-                if (emptyIndex >= 0) {
-                    pinDigits[emptyIndex].value = value;
-                    
-                    // Move focus to next input if available
-                    if (emptyIndex < pinDigits.length - 1) {
-                        pinDigits[emptyIndex + 1].focus();
-                    }
-                }
-            }
-        });
     });
 
     // Button Bar Functionality
@@ -285,9 +203,8 @@ document.addEventListener('DOMContentLoaded', function() {
         backgroundMusic.muted = !isSoundOn;
         pageFlipSound.muted = !isSoundOn;
         
-        // Update icon and toggle muted class for SVG switching
-        this.classList.toggle('muted', !isSoundOn);
-        // The icon appearance will change via CSS
+        // Update icon
+        this.querySelector('i').className = isSoundOn ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
         
         // Toggle active class
         this.classList.toggle('active', isSoundOn);
@@ -299,10 +216,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (isPlaying) {
             backgroundMusic.play();
-            this.classList.add('paused');
+            this.querySelector('i').className = 'fa-solid fa-pause';
         } else {
             backgroundMusic.pause();
-            this.classList.remove('paused');
+            this.querySelector('i').className = 'fa-solid fa-play';
         }
         
         // Toggle active class
@@ -315,11 +232,11 @@ document.addEventListener('DOMContentLoaded', function() {
             document.documentElement.requestFullscreen().catch(err => {
                 console.log(`Error attempting to enable fullscreen: ${err.message}`);
             });
-            this.classList.add('active');
+            this.querySelector('i').className = 'fa-solid fa-compress';
         } else {
             if (document.exitFullscreen) {
                 document.exitFullscreen();
-                this.classList.remove('active');
+                this.querySelector('i').className = 'fa-solid fa-expand';
             }
         }
     });
@@ -327,7 +244,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle fullscreen change
     document.addEventListener('fullscreenchange', function() {
         document.body.classList.toggle('fullscreen-enabled', !!document.fullscreenElement);
-        fullscreenBtn.classList.toggle('active', !!document.fullscreenElement);
     });
     
     // Turn.js page-flip sound integration
