@@ -333,7 +333,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         if (isMobile) {
             const viewportMeta = document.querySelector('meta[name="viewport"]');
-            viewportMeta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+            viewportMeta.content = 'width=device-width, initial-scale=1.0';
         }
     }
 
