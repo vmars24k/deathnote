@@ -167,6 +167,56 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // PIN pad functionality
+    const pinPad = document.querySelector('.pin-pad');
+    const pinPadButtons = document.querySelectorAll('.pin-pad-button');
+
+    pinPadButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const value = this.dataset.value;
+            
+            if (value === 'clear') {
+                // Clear all PIN inputs
+                pinDigits.forEach(input => input.value = '');
+                pinDigits[0].focus();
+            } 
+            else if (value === 'backspace') {
+                // Find the last filled input and clear it
+                let lastFilledIndex = -1;
+                for (let i = pinDigits.length - 1; i >= 0; i--) {
+                    if (pinDigits[i].value !== '') {
+                        lastFilledIndex = i;
+                        break;
+                    }
+                }
+                
+                if (lastFilledIndex >= 0) {
+                    pinDigits[lastFilledIndex].value = '';
+                    pinDigits[lastFilledIndex].focus();
+                }
+            } 
+            else {
+                // Find the first empty input and fill it
+                let emptyIndex = -1;
+                for (let i = 0; i < pinDigits.length; i++) {
+                    if (pinDigits[i].value === '') {
+                        emptyIndex = i;
+                        break;
+                    }
+                }
+                
+                if (emptyIndex >= 0) {
+                    pinDigits[emptyIndex].value = value;
+                    
+                    // Move focus to next input if available
+                    if (emptyIndex < pinDigits.length - 1) {
+                        pinDigits[emptyIndex + 1].focus();
+                    }
+                }
+            }
+        });
+    });
+
     // Button Bar Functionality
     const zoomInBtn = document.getElementById('zoom-in');
     const zoomOutBtn = document.getElementById('zoom-out');
@@ -235,8 +285,9 @@ document.addEventListener('DOMContentLoaded', function() {
         backgroundMusic.muted = !isSoundOn;
         pageFlipSound.muted = !isSoundOn;
         
-        // Update icon
-        this.querySelector('.icon').textContent = isSoundOn ? '🔊' : '🔇';
+        // Update icon and toggle muted class for SVG switching
+        this.classList.toggle('muted', !isSoundOn);
+        // The icon appearance will change via CSS
         
         // Toggle active class
         this.classList.toggle('active', isSoundOn);
@@ -248,10 +299,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (isPlaying) {
             backgroundMusic.play();
-            this.querySelector('.icon').textContent = '⏸';
+            this.classList.add('paused');
         } else {
             backgroundMusic.pause();
-            this.querySelector('.icon').textContent = '▶';
+            this.classList.remove('paused');
         }
         
         // Toggle active class
@@ -264,11 +315,11 @@ document.addEventListener('DOMContentLoaded', function() {
             document.documentElement.requestFullscreen().catch(err => {
                 console.log(`Error attempting to enable fullscreen: ${err.message}`);
             });
-            this.querySelector('.icon').textContent = '⤓';
+            this.classList.add('active');
         } else {
             if (document.exitFullscreen) {
                 document.exitFullscreen();
-                this.querySelector('.icon').textContent = '⛶';
+                this.classList.remove('active');
             }
         }
     });
@@ -276,6 +327,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle fullscreen change
     document.addEventListener('fullscreenchange', function() {
         document.body.classList.toggle('fullscreen-enabled', !!document.fullscreenElement);
+        fullscreenBtn.classList.toggle('active', !!document.fullscreenElement);
     });
     
     // Turn.js page-flip sound integration
