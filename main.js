@@ -2,7 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     // Set the password (in a real app, this would be hashed and stored securely)
-    const correctPassword = 'deathnotebook';
+    const correctPassword = 'iamjustice';
     
     // Store notes data
     let notesData = {};
